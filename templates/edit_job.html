@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Job</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <div class="container mx-auto p-8">
+        <h1 class="text-3xl font-bold mb-6">Edit Job</h1>
+        <form class="space-y-4" action="{{ url_for('edit_job', job_id=job.id) }}" method="POST" enctype="multipart/form-data">
+            <div class="mb-4">
+                <label for="title" class="block text-gray-700">Job Title</label>
+                <input type="text" id="title" name="title" value="{{ job.title }}" class="w-full p-2 border rounded">
+            </div>
+            <div class="mb-4">
+                <label for="qualifications" class="block text-gray-700">Qualifications</label>
+                <input type="text" id="qualifications" name="qualifications" value="{{ job.qualifications }}" class="w-full p-2 border rounded">
+            </div>
+            <div class="mb-4">
+                <label for="description" class="block text-gray-700">Job Description</label>
+                <textarea id="description" name="description" class="w-full p-2 border rounded">{{ job.description }}</textarea>
+            </div>
+            <div class="mb-4">
+                <label for="domain" class="block text-gray-700">Domain</label>
+                <select id="domain" name="domain" class="w-full border border-gray-300 p-2 rounded" required>
+                    <option value="IT" {% if job.domain == 'IT' %}selected{% endif %}>IT</option>
+                    <option value="Finance" {% if job.domain == 'Finance' %}selected{% endif %}>Finance</option>
+                    <option value="Healthcare" {% if job.domain == 'Healthcare' %}selected{% endif %}>Healthcare</option>
+                    <option value="Education" {% if job.domain == 'Education' %}selected{% endif %}>Education</option>
+                    <option value="Marketing" {% if job.domain == 'Marketing' %}selected{% endif %}>Marketing</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label for="file-upload" class="block text-gray-700">Upload PDF</label>
+                <div class="relative">
+                    <input id="file-upload" name="pdf" type="file" accept="application/pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                    <button type="button" class="w-full bg-blue-700 text-white py-2 rounded hover:bg-blue-800">Choose File</button>
+                </div>
+            </div>
+            <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded hover:bg-blue-800">Update</button>
+        </form>
+    </div>
+</body>
+</html>

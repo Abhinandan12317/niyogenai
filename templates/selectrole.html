@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Role - AI-Powered Hiring</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .hero {
+            background-color: #1E40AF;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 5px solid #3B82F6;
+        }
+        .form-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+            padding: 2rem;
+            background-color: #F3F4F6;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .form-content {
+            width: 100%;
+            max-width: 600px;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        .input-group label {
+            font-weight: 600;
+            color: #4B5563;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid #D1D5DB;
+            background-color: #F9FAFB;
+            font-size: 1rem;
+            color: #333;
+            transition: border 0.3s ease;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #3B82F6;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-top: 1rem;
+        }
+        .checkbox-group input {
+            margin-right: 0.5rem;
+        }
+        .button {
+            width: 100%;
+            padding: 1rem;
+            background-color: #3B82F6;
+            color: white;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #2563EB;
+        }
+        .progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: #D1D5DB;
+            border-radius: 2px;
+            transition: height 0.3s ease;
+        }
+        .progress-bar.active {
+            background-color: #3B82F6;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <h1 class="text-3xl font-semibold">Select Your Role</h1>
+        <p class="mt-2 text-lg">Choose your role to proceed with AI-Powered Hiring.</p>
+    </header>
+
+    <!-- Multi-Step Form Section -->
+    <section class="container mx-auto form-container">
+        <div class="form-content relative">
+            <div class="progress-bar" id="progressBar"></div>
+            <form id="multiStepForm" method="POST" action="/selectrole">
+                
+                <!-- Personal Details -->
+                <div class="mb-6">
+                    <h2 class="text-xl font-semibold mb-4">Personal Details</h2>
+                    <div class="input-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" class="input-field" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="qualification">Qualification</label>
+                        <input type="text" id="qualification" name="qualification" class="input-field" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="experience">Company Name/Position</label>
+                        <input type="text" id="experience" name="experience" class="input-field" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="skills">Skills</label>
+                        <input type="text" id="skills" name="skills" class="input-field" required>
+                    </div>
+                </div>
+
+                <!-- Terms and Conditions -->
+                <div class="checkbox-group">
+                    <input type="checkbox" id="terms" name="terms">
+                    <label for="terms" class="text-sm">I accept the <a href="#" class="text-blue-600">terms and conditions</a></label>
+                </div>
+
+                <!-- Choose Role -->
+                <div id="chooseRole" class="mt-6 hidden">
+                    <h2 class="text-xl font-semibold mb-4">Choose Your Role</h2>
+                    <div class="flex flex-col md:flex-row justify-center gap-4">
+                        <button type="submit" name="role" value="recruiter" class="button">Recruiter</button>
+                        <button type="submit" name="role" value="client" class="button">Client</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        const termsCheckbox = document.getElementById('terms');
+        const chooseRoleSection = document.getElementById('chooseRole');
+        const progressBar = document.getElementById('progressBar');
+        const inputFields = document.querySelectorAll('.input-field');
+
+        function updateProgressBar() {
+            let filledFields = 0;
+            inputFields.forEach(field => {
+                if (field.value.trim() !== '') {
+                    filledFields++;
+                }
+            });
+            const progress = Math.max(5, (filledFields / inputFields.length) * 70);
+            progressBar.style.height = progress + '%';
+            if (filledFields === inputFields.length && termsCheckbox.checked) {
+                chooseRoleSection.classList.remove('hidden');
+            } else {
+                chooseRoleSection.classList.add('hidden');
+            }
+        }
+
+        inputFields.forEach(field => {
+            field.addEventListener('input', updateProgressBar);
+            field.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    const nextInput = field.nextElementSibling;
+                    if (nextInput && nextInput.classList.contains('input-field')) {
+                        nextInput.focus();
+                    }
+                }
+            });
+        });
+
+        termsCheckbox.addEventListener('change', updateProgressBar);
+
+        // Initialize progress bar
+        updateProgressBar();
+    </script>
+
+</body>
+</html>

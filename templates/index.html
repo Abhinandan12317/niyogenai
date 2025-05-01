@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NiyoGen AI</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Bootstrap JS (Bundle with Popper.js) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+
+  <style>
+    .hero-section {
+      background: linear-gradient(to right, #1e3a8a, #2563eb);
+      color: white;
+      position: relative;
+      padding-top: 12rem;
+      padding-bottom: 12rem;
+    }
+
+    .dropdown-menu.show {
+      display: block;
+    }
+
+    .feature-icon {
+      height: 48px;
+      margin-bottom: 1rem;
+    }
+
+    footer {
+      background-color: #1f2937;
+      color: #9ca3af;
+    }
+
+    footer a:hover {
+      color: white;
+    }
+  </style>
+</head>
+
+<body class="bg-light">
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow">
+    <div class="container">
+      <a class="navbar-brand fw-bold fs-3" href="#">NiyoGen AI</a>
+      
+      <!-- Toggle button for mobile layout -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <!-- Navbar Menu -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          
+          <!-- Recruiter Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="recruiterDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Recruiter</a>
+            <ul class="dropdown-menu" aria-labelledby="recruiterDropdown">
+              <li><a class="dropdown-item" href="{{ url_for('recruiter') }}">Dashboard</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('index') }}">Post Job</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('index') }}">Manage Applicants</a></li>
+            </ul>
+          </li>
+  
+          <!-- Applicant Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="applicantDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Applicant</a>
+            <ul class="dropdown-menu" aria-labelledby="applicantDropdown">
+              <li><a class="dropdown-item" href="{{ url_for('client') }}">Profile</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('index') }}">Upload Resume</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('index') }}">Job Applications</a></li>
+            </ul>
+          </li>
+  
+          <!-- Home Link -->
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+          </li>
+  
+          <!-- Login Button -->
+          <li class="nav-item">
+            <a class="btn btn-primary" href="{{ url_for('login') }}">Login</a>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </nav>
+  
+  
+
+  <!-- Hero Section -->
+<section class="hero-section text-center text-white py-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <!-- Left Column (Text) -->
+      <div class="col-12 col-md-6 text-center text-md-start mb-5 mb-md-0">
+        <h1 class="display-4 fw-bold text-decoration-underline">AI-Powered Hiring</h1>
+        <p class="lead mt-4">Our AI-driven platform transforms recruitment with smart matching, unbiased screening, and seamless hiring automation.</p>
+        <p class="lead">It ensures companies find the best talent efficiently while maintaining a fair and transparent hiring process.</p>
+        <p class="lead">Revolutionizing recruitment with AI-driven matching and bias-free hiring.</p>
+      </div>
+      
+      <!-- Right Column (Image) -->
+      <div class="col-12 col-md-6 text-center text-md-end">
+        <img src="{{ url_for('static', filename='images/1.jpg') }}" class="img-fluid rounded shadow" alt="AI Recruitment" style="max-width: 300px;" />
+      </div>
+    </div>
+
+    <!-- Get Started Button -->
+    <a href="{{ url_for('login') }}" class="btn btn-light text-primary border-primary mt-5 px-4 py-2 fw-bold">Get Started</a>
+  </div>
+</section>
+
+
+  <!-- Key Features -->
+  <section class="py-5 bg-light">
+    <div class="container text-center">
+      <h2 class="display-5 fw-bold mb-3">Key Features</h2>
+      <p class="text-muted mb-5">Unlock smarter, faster, and fairer hiring with NiyoGen AI</p>
+
+      <div class="row g-4">
+        {% for feature in [
+          ("AI-Powered Resume Parsing", "Automatically extract key skills, education, and experience from resumes using NLP.", "file-alt", "text-primary"),
+          ("Smart Candidate Filtering", "Instantly rank applicants based on job fit, skills, and experience match.", "filter", "text-info"),
+          ("Bias-Free Screening", "Ensure fair recruitment with algorithms that ignore gender, age, or race.", "shield-alt", "text-success"),
+          ("Instant Job Matching", "Match resumes to open roles instantly using ML-based compatibility scores.", "bolt", "text-warning"),
+          ("Automated Candidate Insights", "View intelligent summaries and red flags from resumes to speed up shortlisting.", "chart-bar", "text-purple"),
+          ("Analytics Dashboard", "Track application stats, performance scores, and hiring timelines in real-time.", "th-large", "text-danger"),
+          ("Seamless ATS Integration", "Easily plug into your existing Applicant Tracking Systems for faster workflows.", "plug", "text-success"),
+          ("Data Privacy & Compliance", "Built with GDPR and EEOC compliance to protect candidate information and ensure ethical hiring.", "shield-alt", "text-secondary")
+        ] %}
+        <div class="col-md-6 col-lg-3">
+          <div class="card h-100 shadow border-0">
+            <div class="card-body text-center">
+              <i class="fas fa-{{ feature[2] }} fa-2x mb-3 {{ feature[3] }}"></i>
+              <h5 class="card-title">{{ feature[0] }}</h5>
+              <p class="card-text small text-muted">{{ feature[1] }}</p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+
+    
+    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NiyoGen AI</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    .profile-img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid #0d6efd;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Our Developers -->
+<section id="our-devs" class="py-5 bg-white">
+  <div class="container text-center">
+    <h2 class="fw-bold mb-3">Our Developers</h2>
+    <p class="text-muted mb-5">Meet the brains behind NiyoGen AI</p>
+    <div class="row g-4">
+      
+      <!-- Abhinandan -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card border-0">
+          <div class="text-center">
+            <img src="{{ url_for('static', filename='developers/Abhinandan.jpg') }}" alt="Abhinandan - Backend Developer" class="profile-img shadow mb-3">
+            <h5 class="fw-bold">Abhinandan</h5>
+            <p class="text-muted mb-0">Backend Python Developer</p>
+            <p class="text-muted mb-0">ATMECE-2nd year CSE</p>
+            <p class="text-muted">USN: 4AD23CS002</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Harshith -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card border-0">
+          <div class="text-center">
+            <img src="{{ url_for('static', filename='developers/Harshith.jpg') }}" alt="Harshith - Frontend Developer" class="profile-img shadow mb-3">
+            <h5 class="fw-bold">Harshith A N</h5>
+            <p class="text-muted mb-0">Frontend Developer</p>
+            <p class="text-muted mb-0">ATMECE-2nd year CSE</p>
+            <p class="text-muted">USN: 4AD23CS037</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Janya -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card border-0">
+          <div class="text-center">
+            <img src="{{ url_for('static', filename='developers/Janya.jpg') }}" alt="Janya - Frontend Designer" class="profile-img shadow mb-3">
+            <h5 class="fw-bold">Janya U Singh</h5>
+            <p class="text-muted mb-0">Frontend Designer</p>
+            <p class="text-muted mb-0">ATMECE-2nd year CSE</p>
+            <p class="text-muted">USN: 4AD23CS042</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lakshmi -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card border-0">
+          <div class="text-center">
+            <img src="{{ url_for('static', filename='developers/Lakshmi.jpg') }}" alt="Lakshmi - Database Engineer" class="profile-img shadow mb-3">
+            <h5 class="fw-bold">Lakshmi M</h5>
+            <p class="text-muted mb-0">Database Engineer</p>
+            <p class="text-muted mb-0">ATMECE-2nd year CSE</p>
+            <p class="text-muted">USN: 4AD23CS055</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Why Choose Us -->
+<section id="why-choose-us" class="py-5 bg-primary text-white text-center">
+  <div class="container">
+    <h2 class="fw-semibold mb-4">Why Choose NiyoGen AI?</h2>
+    <p class="mb-5">Experience the future of recruitment with NiyoGen AI. Our intelligent platform leverages advanced AI to ensure fair hiring, accelerate screening, and precisely match candidates to the right opportunities.</p>
+    
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="bg-white text-dark rounded-4 shadow p-4">
+          <h5 class="fw-bold mb-3">Efficiency Improvement</h5>
+          <canvas id="efficiencyChart"></canvas>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="bg-white text-dark rounded-4 shadow p-4">
+          <h5 class="fw-bold mb-3">Candidate Matching Accuracy</h5>
+          <canvas id="accuracyChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section id="testimonials" class="py-5 bg-light text-center">
+  <div class="container">
+    <h2 class="fw-semibold mb-4">What Our Users Say</h2>
+    <div id="quotes" class="fst-italic mb-4 fs-5"></div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="bg-white p-4 rounded-4 shadow">
+          <h3 class="fw-bold mb-2">95%</h3>
+          <p class="text-muted">Improved hiring efficiency.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="bg-white p-4 rounded-4 shadow">
+          <h3 class="fw-bold mb-2">90%</h3>
+          <p class="text-muted">Found ideal candidates fast.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="bg-white p-4 rounded-4 shadow">
+          <h3 class="fw-bold mb-2">85%</h3>
+          <p class="text-muted">Appreciated fair hiring process.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<!-- Footer -->
+<footer class="bg-dark text-white py-5">
+  <div class="container">
+    <div class="row">
+      <!-- About Us -->
+      <div class="col-md-4 mb-4 mb-md-0 text-center text-md-start">
+        <h5>About Us</h5>
+        <p>NiyoGen AI streamlines hiring with automation and fairness.</p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="col-md-4 mb-4 mb-md-0 text-center text-md-start">
+        <h5>Quick Links</h5>
+        <ul class="list-unstyled">
+          <li><a href="#home" class="text-white">Home</a></li>
+          <li><a href="#features" class="text-white">Key Features</a></li>
+          <li><a href="#why-choose-us" class="text-white">Why Choose Us</a></li>
+          <li><a href="#our-devs" class="text-white">Our Developers</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Us -->
+      <div class="col-md-4 text-center text-md-start">
+        <h5>Contact Us</h5>
+        <p>Email: <a href="mailto:team.niyogenai@gmail.com" class="text-white">team.niyogenai@gmail.com</a></p>
+        <p>Phone: <a href="tel:+919482053968" class="text-white">+91 9482053968</a></p>
+        <div class="d-flex justify-content-center justify-content-md-start gap-3 mt-3">
+          <a href="#" class="text-white fs-4"><i class="fab fa-linkedin"></i></a>
+          <a href="#" class="text-white fs-4"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="text-white fs-4"><i class="fab fa-facebook"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- JS Scripts -->
+<script>
+  const quotes = [
+    "NiyoGen AI has transformed our hiring process. It's efficient and unbiased.",
+    "The AI job matching feature is a game-changer. We found the perfect candidates quickly.",
+    "I love how easy it is to schedule interviews and manage applicants with NiyoGen AI.",
+    "The candidate ranking system helped us identify the best fit for our roles effortlessly."
+  ];
+  let currentQuoteIndex = 0;
+  function showNextQuote() {
+    document.getElementById('quotes').textContent = quotes[currentQuoteIndex];
+    currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+  }
+  setInterval(showNextQuote, 3000);
+  document.addEventListener('DOMContentLoaded', showNextQuote);
+
+  // Chart JS
+  document.addEventListener('DOMContentLoaded', function () {
+    new Chart(document.getElementById('efficiencyChart'), {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [{
+          label: 'Efficiency Improvement',
+          data: [65, 59, 80, 81, 56, 55, 40, 45, 60, 70, 75, 90],
+          borderColor: 'rgba(13,110,253,1)',
+          backgroundColor: 'rgba(13,110,253,0.2)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('accuracyChart'), {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [{
+          label: 'Matching Accuracy',
+          data: [70, 72, 75, 78, 80, 82, 85, 87, 90, 92, 95, 97],
+          borderColor: 'rgba(102,16,242,1)',
+          backgroundColor: 'rgba(102,16,242,0.2)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+  });
+</script>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+<script>
+  // Handle the navbar toggling when clicking the 'More' button
+  document.addEventListener("DOMContentLoaded", function () {
+    const navbarToggler = document.querySelector(".navbar-toggler");
+    const navbarCollapse = document.getElementById("navbarNav");
+    
+    // Toggle the navbar collapse when the button is clicked
+    navbarToggler.addEventListener("click", function () {
+      navbarCollapse.classList.toggle("show");
+    });
+
+    // Handle dropdown menu toggling within the collapsed navbar
+    const dropdownToggle = document.querySelectorAll('.nav-item.dropdown > a');
+    dropdownToggle.forEach(item => {
+      item.addEventListener('click', function (event) {
+        // Prevent dropdown from closing immediately after clicking
+        event.stopPropagation();
+        const dropdownMenu = this.nextElementSibling;
+        
+        // Toggle the visibility of the dropdown menu
+        dropdownMenu.classList.toggle('show');
+      });
+    });
+
+    // Close the dropdown menu if clicked anywhere outside the navbar
+    document.addEventListener('click', function (e) {
+      if (!navbarCollapse.contains(e.target)) {
+        const dropdownMenus = document.querySelectorAll('.dropdown-menu');
+        dropdownMenus.forEach(menu => menu.classList.remove('show'));
+      }
+    });
+  });
+</script>

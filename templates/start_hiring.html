@@ -1,0 +1,24 @@
+<!-- filepath: c:\Users\Harshith A N\Desktop\project\lb4\templates\start_hiring.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Hiring</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+<body class="bg-gray-100 text-gray-900">
+    <div class="container mx-auto px-6 py-12">
+        <h2 class="text-3xl font-semibold mb-4">Candidates for {{ job.title }}</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+            {% for application in applications %}
+            <div class="p-8 bg-white shadow-lg rounded-3xl text-center">
+                <h3 class="text-2xl font-bold mb-3">{{ application.name }}</h3>
+                <p class="mt-4 text-sm text-gray-600">{{ application.description }}</p>
+                <a href="{{ url_for('view_resume', filename=application.resume_filename) }}" class="text-blue-600 hover:text-blue-800 transition">View Resume</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

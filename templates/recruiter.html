@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Recruiter Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .sidebar {
+      transition: transform 0.3s ease-in-out;
+    }
+    .sidebar-hidden {
+      transform: translateX(-100%);
+    }
+    .menu-button-active {
+      background-color: white;
+      color: #1E3A8A;
+    }
+    .ml-64 {
+      margin-left: 16rem;
+    }
+    .input-field {
+      transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+    .input-field:focus {
+      border-color: #1E3A8A;
+      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.3);
+    }
+    .file-upload-button {
+      transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+    }
+    .file-upload-button:hover {
+      background-color: #1E3A8A;
+      color: white;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+
+  <!-- Sidebar and Main Layout -->
+  <div class="flex min-h-screen">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-1/5 bg-blue-700 text-white p-6 flex flex-col sidebar sidebar-hidden fixed top-0 left-0 h-full z-50">
+      <nav class="flex flex-col space-y-4 mt-16">
+        <button class="flex items-center py-2 px-4 rounded-lg hover:bg-blue-800" onclick="showNewJob()">
+          <i class="fas fa-plus mr-3"></i> New Job
+        </button>
+        <button class="flex items-center py-2 px-4 rounded-lg hover:bg-blue-800" onclick="showAllJobs()">
+          <i class="fas fa-briefcase mr-3"></i> All Jobs
+        </button>
+        <button class="flex items-center py-2 px-4 rounded-lg hover:bg-blue-800" onclick="showCandidates()">
+          <i class="fas fa-users mr-3"></i> Start Hiring
+        </button>
+        <button class="flex items-center py-2 px-4 rounded-lg hover:bg-blue-800">
+          <i class="fas fa-chart-line mr-3"></i> Analytics
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="main-content" class="flex-1 p-8 ml-0 transition-all duration-300">
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-6">
+        <button id="menu-button" onclick="toggleSidebar()" class="bg-blue-700 text-white py-2 px-4 rounded-lg hover:bg-blue-800 flex items-center">
+          <i class="fas fa-bars mr-2"></i> Menu
+        </button>
+        <div class="flex-1 text-center">
+          <h1 class="text-3xl font-bold text-gray-800">Welcome, {{ session['user']['name'] }}</h1>
+          <p class="text-gray-500">Manage your dashboard and stay updated.</p>
+        </div>
+      </div>
+
+      <!-- Default Dashboard Chart -->
+      <div id="main-content-inner">
+        <div class="bg-white p-8 rounded-lg shadow max-w-4xl mx-auto">
+          <h2 class="text-2xl font-semibold mb-4">Efficiency Comparison</h2>
+          <canvas id="efficiencyComparisonChart"></canvas>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Chart Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const ctx = document.getElementById('efficiencyComparisonChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          datasets: [
+            {
+              label: 'Before Using NiyoGen AI',
+              data: [40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95],
+              borderColor: 'rgba(255, 99, 132, 1)',
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              fill: true,
+              tension: 0.1
+            },
+            {
+              label: 'After Using NiyoGen AI',
+              data: [65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120],
+              borderColor: 'rgba(54, 162, 235, 1)',
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              fill: true,
+              tension: 0.1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    });
+  </script>
+
+  <!-- Dashboard Logic -->
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      const mainContent = document.getElementById("main-content");
+      const menuButton = document.getElementById("menu-button");
+
+      sidebar.classList.toggle("sidebar-hidden");
+      mainContent.classList.toggle("ml-64");
+      menuButton.classList.toggle("menu-button-active");
+    }
+
+  </script>
+  <script>
+   
+    function showNewJob() {
+        document.getElementById('main-content-inner').innerHTML = `
+            <div class="bg-white p-8 rounded-lg shadow max-w-xl mx-auto">
+                <h2 class="text-2xl font-semibold mb-4">Post a New Job</h2>
+                <form class="space-y-4" action="/submit_job" method="POST" enctype="multipart/form-data">
+                    <div class="relative">
+                        <input type="text" name="title" placeholder="Job Title" class="w-full p-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600 input-field">
+                    </div>
+                    <div class="relative">
+                        <input type="text" name="qualifications" placeholder="Qualifications" class="w-full p-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600 input-field">
+                    </div>
+                    <div class="relative">
+                        <textarea name="description" placeholder="Job Description" class="w-full p-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600 input-field"></textarea>
+                    </div>
+                    <div class="relative mb-4">
+                        <label for="domain" class="block text-gray-700">Domain</label>
+                        <select id="domain" name="domain" class="w-full border border-gray-300 p-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-600 input-field" required>
+                            <option value="IT">IT</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Education">Education</option>
+                            <option value="Marketing">Marketing</option>
+                        </select>
+                    </div>
+                    <div class="relative mb-4">
+                        <label for="file-upload" class="block text-gray-700">Upload PDF</label>
+                        <div class="relative">
+                            <input id="file-upload" name="pdf" type="file" accept="application/pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="displayFileName()">
+                            <button type="button" class="w-full bg-blue-700 text-white py-2 rounded hover:bg-blue-800 file-upload-button">Choose File</button>
+                        </div>
+                        <span id="file-name" class="block mt-2 text-gray-600"></span>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded hover:bg-blue-800">Submit</button>
+                </form>
+            </div>`;
+    }
+
+    function displayFileName() {
+        const fileInput = document.getElementById('file-upload');
+        const fileName = fileInput.files[0].name;
+        document.getElementById('file-name').textContent = fileName;
+        document.querySelector('.file-upload-button').style.backgroundColor = '#1E3A8A';
+        document.querySelector('.file-upload-button').style.color = 'white';
+    }
+
+    function showAllJobs() {
+        fetch('/jobs')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('main-content-inner').innerHTML = `
+                    <div class="bg-white p-8 rounded-lg shadow max-w-4xl mx-auto">
+                        <h2 class="text-2xl font-semibold mb-4">All Jobs</h2>
+                        ${html}
+                    </div>`;
+            })
+            .catch(error => console.error('Error fetching jobs:', error));
+    }
+
+    function showCandidates() {
+        const jobId = prompt("Enter the Job ID to view candidates:");
+        if (jobId) {
+            fetch(`/start_hiring/${jobId}`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('main-content-inner').innerHTML = `
+                        <div class="bg-white p-8 rounded-lg shadow max-w-4xl mx-auto">
+                            <h2 class="text-2xl font-semibold mb-4">Candidates for Job ID: ${jobId}</h2>
+                            ${html}
+                        </div>`;
+                })
+                .catch(error => console.error('Error fetching candidates:', error));
+        }
+    }
+
+    function showEditJob(jobId) {
+        fetch(`/edit_job/${jobId}`)
+            .then(response => response.json())
+            .then(job => {
+                document.getElementById('main-content-inner').innerHTML = `
+                    <div class="bg-white p-8 rounded-lg shadow max-w-xl mx-auto">
+                        <h2 class="text-2xl font-semibold mb-4">Edit Job</h2>
+                        <form class="space-y-4" action="/edit_job/${job.id}" method="POST" enctype="multipart/form-data" onsubmit="return redirectToAllJobs(event)">
+                            <div class="relative">
+                                <input type="text" name="title" value="${job.title}" placeholder="Job Title" class="w-full p-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600 input-field">
+                            </div>
+                            <div class="relative">
+                                <input type="text" name="qualifications" value="${job.qualifications}" placeholder="Qualifications" class="w-full p-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600 input-field">
+                            </div>
+                            <div class="relative">
+                                <textarea name="description" placeholder="Job Description" class="w-full p-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600 input-field">${job.description}</textarea>
+                            </div>
+                            <div class="relative mb-4">
+                                <label for="domain" class="block text-gray-700">Domain</label>
+                                <select id="domain" name="domain" class="w-full border border-gray-300 p-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-600 input-field" required>
+                                    <option value="IT" ${job.domain === 'IT' ? 'selected' : ''}>IT</option>
+                                    <option value="Finance" ${job.domain === 'Finance' ? 'selected' : ''}>Finance</option>
+                                    <option value="Healthcare" ${job.domain === 'Healthcare' ? 'selected' : ''}>Healthcare</option>
+                                    <option value="Education" ${job.domain === 'Education' ? 'selected' : ''}>Education</option>
+                                    <option value="Marketing" ${job.domain === 'Marketing' ? 'selected' : ''}>Marketing</option>
+                                </select>
+                            </div>
+                            <div class="relative mb-4">
+                                <label for="file-upload" class="block text-gray-700">Upload PDF</label>
+                                <div class="relative">
+                                    <input id="file-upload" name="pdf" type="file" accept="application/pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="displayFileName()">
+                                    <button type="button" class="w-full bg-blue-700 text-white py-2 rounded hover:bg-blue-800 file-upload-button">Choose File</button>
+                                </div>
+                                <span id="file-name" class="block mt-2 text-gray-600"></span>
+                            </div>
+                            <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded hover:bg-blue-800">Update</button>
+                        </form>
+                    </div>`;
+            })
+            .catch(error => console.error('Error fetching job details:', error));
+    }
+
+    function deleteJob(jobId) {
+        if (confirm("Are you sure you want to delete this job?")) {
+            fetch(`/delete_job/${jobId}`, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Job deleted successfully!");
+                    showAllJobs();
+                } else {
+                    alert("Failed to delete job.");
+                }
+            })
+            .catch(error => console.error('Error deleting job:', error));
+        }
+    }
+
+    function confirmDelete(event) {
+        if (confirm("Are you sure you want to delete this job?")) {
+            alert("Job deleted successfully!");
+            showAllJobs();
+            return true;
+        } else {
+            event.preventDefault();
+            return false;
+        }
+    }
+
+    function redirectToAllJobs(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+        fetch(form.action, {
+            method: form.method,
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("Job updated successfully!");
+                showAllJobs();
+            } else {
+                alert("Failed to update job.");
+            }
+        })
+        .catch(error => console.error('Error updating job:', error));
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('efficiencyComparisonChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [
+                    {
+                        label: 'Before Using NiyoGen AI',
+                        data: [40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95],
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        fill: true,
+                        tension: 0.1
+                    },
+                    {
+                        label: 'After Using NiyoGen AI',
+                        data: [65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120],
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        fill: true,
+                        tension: 0.1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+
+</body>
+</html>
